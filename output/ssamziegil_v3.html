@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쌈지길 SSAMZIEGIL — 인사동의 예술이 흐르는 길</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'SSAMZIENBLJK';
+    src: url('fonts/SSAMZIENBLJK.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --ink: #222222;
+    --cream: #ffffff;
+    --warm: #FFE500;
+    --warmLight: #FFF9C4;
+    --warmDark: #D4C200;
+    --stone: #555555;
+    --lightStone: #888888;
+    --offWhite: #f9f9f9;
+    --deep: #ffffff;
+    --accent: #FFE500;
+    --ssamzi: 'SSAMZIENBLJK', 'Noto Serif KR', serif;
+    --serif: 'Noto Serif KR', serif;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { background: #ffffff; color: #222222; font-family: var(--sans); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ============== NAV ============== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3.5vw; height: 72px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: background 0.4s;
+  }
+  .nav-logo {
+    display: flex; align-items: center;
+  }
+  .nav-logo img {
+    height: 44px; width: auto;
+  }
+  .nav-links { display: flex; gap: 2.2rem; align-items: center; }
+  .nav-links a {
+    font-size: 0.82rem; font-weight: 400; letter-spacing: 0.06em;
+    color: rgba(34,34,34,0.65); transition: color 0.3s; cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--warm); }
+  .nav-lang {
+    font-size: 0.72rem; padding: 5px 14px; border: 1px solid rgba(34,34,34,0.25);
+    border-radius: 20px; color: #222; cursor: pointer; transition: all 0.3s;
+    user-select: none;
+  }
+  .nav-lang:hover { background: var(--warm); color: #222; }
+
+  /* Mobile hamburger */
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 5px;
+  }
+  .nav-hamburger span {
+    display: block; width: 24px; height: 2px; background: #222;
+    transition: all 0.3s;
+  }
+
+  /* ============== HERO ============== */
+  .hero {
+    position: relative; height: 100vh; display: flex; align-items: center;
+    justify-content: center; overflow: hidden;
+  }
+  .hero-slider {
+    position: absolute; inset: 0; z-index: 0;
+  }
+  .hero-slide {
+    position: absolute; inset: 0; opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+  }
+  .hero-slide.active { opacity: 1; }
+  .hero-slide img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.55);
+    transform: scale(1.02);
+    animation: slowZoom 20s infinite alternate ease-in-out;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(26,23,20,0.5) 0%, rgba(26,23,20,0.2) 40%, rgba(26,23,20,0.7) 100%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative; z-index: 2; text-align: center;
+  }
+  .hero-logo-wrapper {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 1.2s 0.2s ease-out forwards;
+  }
+  .hero-logo-wrapper h1 {
+    font-family: var(--ssamzi); font-weight: 900; font-size: clamp(3.5rem, 8vw, 6rem);
+    line-height: 1; letter-spacing: 0.1em; color: #FFE500;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+  }
+  .hero-subtitle {
+    font-family: var(--ssamzi); font-weight: 300; font-size: clamp(1.5rem, 3vw, 2.2rem);
+    line-height: 1.3; color: #ffffff; margin-top: 1rem;
+    opacity: 0; animation: fadeUp 1s 0.5s ease-out forwards;
+  }
+  .hero-subtitle em { font-style: normal; font-weight: 700; color: #fff; }
+  .hero-tagline {
+    margin-top: 1.5rem; font-size: 1.05rem; font-weight: 300;
+    color: rgba(255,255,255,0.8); letter-spacing: 0.04em;
+    opacity: 0; animation: fadeUp 1s 0.7s ease-out forwards;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s 1s ease-out forwards; z-index: 2;
+  }
+  .hero-scroll span { font-size: 0.65rem; letter-spacing: 0.2em; color: #fff; }
+  .scroll-line {
+    width: 1px; height: 40px; background: linear-gradient(to bottom, var(--warm), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* Slide indicators */
+  .hero-indicators {
+    position: absolute; bottom: 6rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; z-index: 3;
+  }
+  .hero-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.4); cursor: pointer;
+    transition: all 0.3s;
+  }
+  .hero-dot.active { background: #FFE500; transform: scale(1.3); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ============== SECTIONS ============== */
+  section { padding: 7rem 5vw; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.3em; color: #D4A800;
+    text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: var(--ssamzi); font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.8rem);
+    line-height: 1.3; color: #222222; margin-bottom: 1rem;
+  }
+  .section-desc {
+    font-size: 0.95rem; font-weight: 300; color: #666666;
+    line-height: 1.8; max-width: 560px;
+  }
+
+  /* ============== ABOUT ============== */
+  .about { background: #ffffff; }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+  .about-visual {
+    position: relative; aspect-ratio: 3/4; overflow: hidden;
+    border-radius: 4px; background: #f0f0f0;
+  }
+  .about-visual img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.9) contrast(1.05);
+    transition: transform 6s ease;
+  }
+  .about-visual:hover img { transform: scale(1.05); }
+  .about-visual::after {
+    content: ''; position: absolute; inset: 0;
+    border: 1px solid rgba(0,0,0,0.06); pointer-events: none;
+  }
+  .about-text-block h3 {
+    font-family: var(--ssamzi); font-size: 1.15rem; color: #D4A800;
+    margin: 1.8rem 0 0.6rem; letter-spacing: 0.04em;
+  }
+  .about-text-block h3:first-of-type { margin-top: 1.2rem; }
+  .about-stats {
+    display: flex; gap: 2.5rem; margin-top: 2.5rem;
+  }
+  .stat-num {
+    font-family: var(--ssamzi); font-size: 2rem; font-weight: 700; color: #D4A800;
+  }
+  .stat-label {
+    font-size: 0.72rem; color: var(--lightStone); letter-spacing: 0.08em; margin-top: 0.3rem;
+  }
+
+  /* ============== PHOTO GALLERY ============== */
+  .gallery { background: #f5f5f5; padding: 5rem 5vw; }
+  .gallery-header { text-align: center; margin-bottom: 3rem; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 0.8rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .gallery-item {
+    overflow: hidden; border-radius: 3px; cursor: pointer;
+    position: relative;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s ease, filter 0.5s ease;
+    filter: brightness(0.85);
+  }
+  .gallery-item:hover img {
+    transform: scale(1.06); filter: brightness(1);
+  }
+  .gallery-item.wide { grid-column: span 2; }
+  .gallery-item.tall { grid-row: span 2; }
+
+  /* ============== EXPERIENCE ============== */
+  .experience { background: #ffffff; }
+  .exp-header { text-align: center; margin-bottom: 4rem; }
+  .exp-header .section-desc { margin: 0.8rem auto 0; }
+  .exp-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .exp-card {
+    position: relative; overflow: hidden; border-radius: 2px;
+    aspect-ratio: 3/4; cursor: pointer; background: #f0f0f0;
+  }
+  .exp-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.8s ease, filter 0.8s ease;
+    filter: brightness(0.7);
+  }
+  .exp-card:hover img { transform: scale(1.08); filter: brightness(0.4); }
+  .exp-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    transform: translateY(20px); transition: transform 0.5s ease;
+  }
+  .exp-card:hover .exp-card-content { transform: translateY(0); }
+  .exp-card-num {
+    font-family: var(--ssamzi); font-size: 0.7rem; color: #FFE500;
+    letter-spacing: 0.15em; margin-bottom: 0.5rem;
+  }
+  .exp-card-title {
+    font-family: var(--ssamzi); font-size: 1.25rem; font-weight: 700;
+    color: #ffffff; margin-bottom: 0.4rem;
+  }
+  .exp-card-desc {
+    font-size: 0.8rem; color: rgba(245,240,232,0.6);
+    line-height: 1.6; opacity: 0; transition: opacity 0.5s 0.1s ease;
+  }
+  .exp-card:hover .exp-card-desc { opacity: 1; }
+
+  /* ============== SHOPS (Floor Guide) ============== */
+  .shops { background: var(--offWhite); color: var(--ink); }
+  .shops .section-title { color: #222; }
+  .shops .section-desc { color: var(--stone); }
+  .shops-header {
+    text-align: center; max-width: 1200px; margin: 0 auto 2.5rem;
+  }
+  .shops-header .section-desc { margin: 0.5rem auto 0; }
+
+  /* Floor tabs */
+  .floor-tabs {
+    display: flex; justify-content: center; gap: 0.6rem;
+    margin-bottom: 2.5rem; flex-wrap: wrap;
+  }
+  .floor-tab {
+    padding: 0.7rem 1.8rem;
+    border: 2px solid rgba(26,23,20,0.12);
+    border-radius: 30px;
+    font-size: 0.88rem; font-weight: 500;
+    font-family: var(--ssamzi);
+    cursor: pointer; background: transparent;
+    color: var(--stone); transition: all 0.3s;
+    letter-spacing: 0.03em;
+  }
+  .floor-tab:hover {
+    border-color: var(--warmDark); color: var(--warmDark);
+  }
+  .floor-tab.active {
+    background: var(--ink); color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  /* Floor content */
+  .floor-content {
+    max-width: 1300px; margin: 0 auto;
+  }
+  .floor-panel {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  .floor-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .floor-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .floor-map-area {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 90px;
+  }
+  .floor-map-area img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  .floor-map-label {
+    font-family: var(--ssamzi);
+    font-size: 1rem;
+    color: var(--ink);
+    text-align: center;
+    margin-top: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .floor-shops-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .floor-shops-area img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  /* 별관 - 지도 없이 소개 이미지만 표시 */
+  .floor-shops-only {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .floor-shops-only img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  /* ============== VISIT ============== */
+  .visit { background: #222222; }
+  .visit-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .visit-map {
+    aspect-ratio: 16/10; background: rgba(255,255,255,0.05);
+    border-radius: 3px; overflow: hidden; position: relative;
+  }
+  .visit-map iframe {
+    width: 100%; height: 100%; border: 0; filter: grayscale(0.8) brightness(0.8);
+  }
+  .visit-info { display: flex; flex-direction: column; justify-content: center; }
+  .info-block { margin-bottom: 2rem; }
+  .info-label {
+    font-size: 0.68rem; letter-spacing: 0.2em; color: #FFE500;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .info-value {
+    font-size: 0.92rem; color: #ffffff; line-height: 1.8;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2rem; border: 1px solid #FFE500;
+    color: #FFE500; font-size: 0.82rem; letter-spacing: 0.08em;
+    border-radius: 2px; margin-top: 1rem; transition: all 0.3s;
+    font-family: var(--sans); cursor: pointer; background: transparent;
+  }
+  .cta-btn:hover { background: #FFE500; color: #222; }
+  .cta-btn svg { width: 14px; height: 14px; transition: transform 0.3s; }
+  .cta-btn:hover svg { transform: translateX(4px); }
+
+  /* ============== FOOTER ============== */
+  footer {
+    padding: 3rem 5vw 2rem; background: #1a1a1a;
+    border-top: 1px solid rgba(255,229,0,0.15);
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-brand {
+    margin-bottom: 1rem;
+  }
+  .footer-brand img { height: 36px; width: auto; }
+  .footer-addr { font-size: 0.75rem; color: rgba(255,255,255,0.5); line-height: 1.9; }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.75rem; color: rgba(255,255,255,0.5); transition: color 0.3s; }
+  .footer-links a:hover { color: #FFE500; }
+  .footer-copy {
+    text-align: center; padding-top: 2rem; margin-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.68rem; color: rgba(255,255,255,0.35); letter-spacing: 0.05em;
+  }
+
+  /* ============== LIGHTBOX ============== */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 90vw; max-height: 90vh; object-fit: contain;
+    border-radius: 4px;
+  }
+  .lightbox-close {
+    position: absolute; top: 2rem; right: 2rem;
+    font-size: 2rem; color: white; cursor: pointer;
+    background: none; border: none; z-index: 201;
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .exp-cards { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item.wide { grid-column: span 1; }
+    .floor-layout { grid-template-columns: 1fr; }
+    .floor-map-area { position: static; }
+    .visit-grid { grid-template-columns: 1fr; }
+    .nav-links { 
+      display: none; position: fixed; top: 72px; left: 0; right: 0;
+      background: rgba(26,23,20,0.97); flex-direction: column;
+      padding: 2rem; gap: 1.5rem; backdrop-filter: blur(16px);
+    }
+    .nav-links.open { display: flex; }
+    .nav-hamburger { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .exp-cards { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .about-stats { gap: 1.5rem; }
+    .footer-inner { flex-direction: column; gap: 2rem; }
+    .floor-tabs { gap: 0.4rem; }
+    .floor-tab { padding: 0.5rem 1rem; font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo"><img src="images/logo_kr.png" alt="쌈지길"></a>
+  <button class="nav-hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="#about" data-ko="쌈지길 소개" data-en="About">쌈지길 소개</a>
+    <a href="#experience" data-ko="체험" data-en="Experience">체험</a>
+    <a href="#shops" data-ko="매장 안내" data-en="Floor Guide">매장 안내</a>
+    <a href="#visit" data-ko="오시는 길" data-en="Visit">오시는 길</a>
+    <span class="nav-lang" id="langToggle">EN</span>
+  </div>
+</nav>
+
+<!-- ============== HERO SECTION ============== -->
+<section class="hero">
+  <div class="hero-slider">
+    <div class="hero-slide active">
+      <img src="images/photos/HOO_9135.jpg" alt="쌈지길 외관">
+    </div>
+    <div class="hero-slide">
+      <img src="images/photos/HOO_2232.JPG" alt="쌈지길 전경">
+    </div>
+    <div class="hero-slide">
+      <img src="images/photos/쌈지길-야경사진-s.jpg" alt="쌈지길 야경">
+    </div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-logo-wrapper">
+      <h1>쌈지길</h1>
+    </div>
+    <h2 class="hero-subtitle" data-ko="인사동의 <em>예술이 흐르는 길</em>" data-en="A Path Where <em>Art Flows</em> in Insadong">인사동의 <em>예술이 흐르는 길</em></h2>
+    <p class="hero-tagline" data-ko="길을 통해 정겹게 만나는 곳, 인사동 안의 또 다른 인사동" data-en="A warm encounter through the path — another Insadong within Insadong">길을 통해 정겹게 만나는 곳, 인사동 안의 또 다른 인사동</p>
+  </div>
+  <div class="hero-indicators">
+    <div class="hero-dot active" data-slide="0"></div>
+    <div class="hero-dot" data-slide="1"></div>
+    <div class="hero-dot" data-slide="2"></div>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============== ABOUT SECTION ============== -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <img src="images/photos/HOO_9167.jpg" alt="쌈지길 내부 전경">
+    </div>
+    <div class="about-text-block">
+      <p class="section-label">About Ssamziegil</p>
+      <h2 class="section-title" data-ko="길 위의 마을,<br>쌈지길" data-en="A Village on the Path,<br>Ssamziegil">길 위의 마을,<br>쌈지길</h2>
+
+      <h3 data-ko="길을 통해 정겹게 만나는 곳" data-en="A Warm Encounter Through the Path">길을 통해 정겹게 만나는 곳</h3>
+      <p class="section-desc" data-ko="2004년 12월 18일에 오픈한 쌈지길은, 1층 첫걸음길부터 4층 하늘정원이 '길'의 형태로 연결된 이색적인 공간 구조를 가진 건축물입니다. 인사동의 골목과 길을 거닐듯, 쌈지길의 가게에서 공예·디자인·아트 상품을 만나볼 수 있는 인사동 안의 또 다른 인사동 — 쌈지길로 초대합니다." data-en="Opened on December 18, 2004, Ssamziegil is a unique architectural space where the 1st floor 'First Steps Path' connects all the way to the 4th floor 'Sky Garden' in the form of a continuous path. Just as you would stroll through the alleys of Insadong, we invite you to discover craft, design, and art products at Ssamziegil — another Insadong within Insadong.">
+        2004년 12월 18일에 오픈한 쌈지길은, 1층 첫걸음길부터 4층 하늘정원이 '길'의 형태로 연결된 이색적인 공간 구조를 가진 건축물입니다. 인사동의 골목과 길을 거닐듯, 쌈지길의 가게에서 공예·디자인·아트 상품을 만나볼 수 있는 인사동 안의 또 다른 인사동 — 쌈지길로 초대합니다.
+      </p>
+
+      <h3 data-ko="전통과 현대문화가 어우러진 곳" data-en="Where Tradition Meets Modern Culture">전통과 현대문화가 어우러진 곳</h3>
+      <p class="section-desc" data-ko="쌈지길은 우리의 손맛을 느낄 수 있는 전통공예가 현대적인 감각으로 재해석된, 다양한 공예품과 디자인 상품, 작가의 아트 상품을 만날 수 있는 공예·디자인 전문 쇼핑몰입니다.<br><br>쌈지길에는 도자, 섬유, 금속, 목공예 등의 공예품과 젊은 작가·디자이너들의 신선하고 실험적인 디자인숍, 맛과 정성이 가득 담긴 음식점과 찻집이 있습니다. 뿐만 아니라 가운데 마당과 쌈지길 곳곳에서 전시, 공연 등의 다양한 문화이벤트가 진행되며, 체험공방에서는 다양한 체험 프로그램을 통해 공예품을 직접 만들어 볼 수도 있습니다.<br><br>어른과 아이, 친구와 연인이 누구나 함께 문화예술을 즐길 수 있는, 인사동의 대표 복합문화공간 쌈지길은 인사동의 명소로서 다채로운 한국의 멋과 문화를 새롭게 전하려고 합니다. 어서 오세요!" data-en="Ssamziegil is a craft and design specialty shopping mall where traditional crafts are reinterpreted with a modern sensibility, offering a wide variety of handcrafted goods, design products, and artist creations.<br><br>Here you will find ceramics, textiles, metalwork, woodcraft, and fresh experimental design shops by young artists and designers, along with restaurants and teahouses filled with flavor and care. Cultural events such as exhibitions and performances are held throughout the central courtyard and various corners of Ssamziegil, and hands-on workshops allow visitors to create their own crafts.<br><br>Ssamziegil is Insadong's premier cultural complex where adults and children, friends and lovers can all enjoy art and culture together. As a landmark of Insadong, we strive to share the diverse beauty and culture of Korea in new ways. Welcome!">
+        쌈지길은 우리의 손맛을 느낄 수 있는 전통공예가 현대적인 감각으로 재해석된, 다양한 공예품과 디자인 상품, 작가의 아트 상품을 만날 수 있는 공예·디자인 전문 쇼핑몰입니다.
+        <br><br>
+        쌈지길에는 도자, 섬유, 금속, 목공예 등의 공예품과 젊은 작가·디자이너들의 신선하고 실험적인 디자인숍, 맛과 정성이 가득 담긴 음식점과 찻집이 있습니다. 뿐만 아니라 가운데 마당과 쌈지길 곳곳에서 전시, 공연 등의 다양한 문화이벤트가 진행되며, 체험공방에서는 다양한 체험 프로그램을 통해 공예품을 직접 만들어 볼 수도 있습니다.
+        <br><br>
+        어른과 아이, 친구와 연인이 누구나 함께 문화예술을 즐길 수 있는, 인사동의 대표 복합문화공간 쌈지길은 인사동의 명소로서 다채로운 한국의 멋과 문화를 새롭게 전하려고 합니다. 어서 오세요!
+      </p>
+
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-num">68+</div>
+          <div class="stat-label" data-ko="입점 매장" data-en="Shops">입점 매장</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4F</div>
+          <div class="stat-label" data-ko="나선형 산책로" data-en="Spiral Walkway">나선형 산책로</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">20+</div>
+          <div class="stat-label">Years</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PHOTO GALLERY ============== -->
+<section class="gallery">
+  <div class="gallery-header">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-title" data-ko="쌈지길 풍경" data-en="Ssamziegil Scenery">쌈지길 풍경</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item wide" style="aspect-ratio:16/9;">
+      <img src="images/photos/HOO_2232.JPG" alt="쌈지길 외관 전경" loading="lazy">
+    </div>
+    <div class="gallery-item" style="aspect-ratio:4/3;">
+      <img src="images/photos/HOO_2534.JPG" alt="쌈지길 내부" loading="lazy">
+    </div>
+    <div class="gallery-item" style="aspect-ratio:4/3;">
+      <img src="images/photos/HOO_2641.JPG" alt="쌈지길 공간" loading="lazy">
+    </div>
+    <div class="gallery-item" style="aspect-ratio:4/3;">
+      <img src="images/photos/HOO_2420.JPG" alt="쌈지길 상층부" loading="lazy">
+    </div>
+    <div class="gallery-item" style="aspect-ratio:4/3;">
+      <img src="images/photos/HOO_9161.jpg" alt="쌈지길 디테일" loading="lazy">
+    </div>
+    <div class="gallery-item wide" style="aspect-ratio:16/9;">
+      <img src="images/photos/쌈지길-야경사진-s.jpg" alt="쌈지길 야경" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ============== EXPERIENCE SECTION ============== -->
+<section class="experience" id="experience">
+  <div class="exp-header">
+    <p class="section-label">Experience</p>
+    <h2 class="section-title" data-ko="경험하세요" data-en="Experience">경험하세요</h2>
+    <p class="section-desc" data-ko="전통 공예 체험부터 현대 아트까지, 쌈지길만의 특별한 순간들" data-en="From traditional craft workshops to modern art — special moments only at Ssamziegil">전통 공예 체험부터 현대 아트까지, 쌈지길만의 특별한 순간들</p>
+  </div>
+  <div class="exp-cards">
+    <div class="exp-card">
+      <img src="images/photos/HOO_2534.JPG" alt="공예 체험">
+      <div class="exp-card-content">
+        <p class="exp-card-num">01</p>
+        <h3 class="exp-card-title" data-ko="전통 공예 체험" data-en="Traditional Craft Workshop">전통 공예 체험</h3>
+        <p class="exp-card-desc" data-ko="도자, 섬유, 금속, 목공예 등 장인의 손끝에서 태어나는 전통 공예를 직접 만들어보세요." data-en="Create your own traditional crafts — ceramics, textiles, metalwork, and woodcraft — guided by master artisans.">도자, 섬유, 금속, 목공예 등 장인의 손끝에서 태어나는 전통 공예를 직접 만들어보세요.</p>
+      </div>
+    </div>
+    <div class="exp-card">
+      <img src="images/photos/HOO_2641.JPG" alt="갤러리">
+      <div class="exp-card-content">
+        <p class="exp-card-num">02</p>
+        <h3 class="exp-card-title" data-ko="갤러리 & 전시" data-en="Gallery & Exhibition">갤러리 & 전시</h3>
+        <p class="exp-card-desc" data-ko="가운데 마당과 쌈지길 곳곳에서 전시, 공연 등의 다양한 문화이벤트가 진행됩니다." data-en="Exhibitions, performances, and cultural events are held throughout the central courtyard and across Ssamziegil.">가운데 마당과 쌈지길 곳곳에서 전시, 공연 등의 다양한 문화이벤트가 진행됩니다.</p>
+      </div>
+    </div>
+    <div class="exp-card">
+      <img src="images/photos/HOO_2420.JPG" alt="하늘정원">
+      <div class="exp-card-content">
+        <p class="exp-card-num">03</p>
+        <h3 class="exp-card-title" data-ko="하늘정원" data-en="Sky Garden">하늘정원</h3>
+        <p class="exp-card-desc" data-ko="4층 옥상에 펼쳐진 하늘정원에서 인사동의 지붕 너머 하늘을 만나보세요." data-en="Visit the rooftop Sky Garden on the 4th floor and enjoy the sky above Insadong's rooftops.">4층 옥상에 펼쳐진 하늘정원에서 인사동의 지붕 너머 하늘을 만나보세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SHOPS / FLOOR GUIDE ============== -->
+<section class="shops" id="shops">
+  <div class="shops-header">
+    <p class="section-label" style="color:var(--warmDark)">Floor Guide</p>
+    <h2 class="section-title" data-ko="매장 안내" data-en="Floor Guide">매장 안내</h2>
+    <p class="section-desc" data-ko="각 층을 클릭하여 지도와 입점 매장을 확인하세요" data-en="Click each floor to view the map and shop directory">각 층을 클릭하여 지도와 입점 매장을 확인하세요</p>
+  </div>
+
+  <div class="floor-tabs">
+    <button class="floor-tab active" data-floor="b2" data-ko="B2층" data-en="B2F">B2층</button>
+    <button class="floor-tab" data-floor="b1" data-ko="B1층" data-en="B1F">B1층</button>
+    <button class="floor-tab" data-floor="f1" data-ko="1층" data-en="1F">1층</button>
+    <button class="floor-tab" data-floor="f2" data-ko="2층" data-en="2F">2층</button>
+    <button class="floor-tab" data-floor="f3" data-ko="3층" data-en="3F">3층</button>
+    <button class="floor-tab" data-floor="f4" data-ko="4층" data-en="4F">4층</button>
+    <button class="floor-tab" data-floor="annex" data-ko="별관" data-en="Annex">별관</button>
+  </div>
+
+  <div class="floor-content">
+    <!-- B2층 -->
+    <div class="floor-panel active" id="floor-b2">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_B2층.png" alt="B2층 지도">
+          <p class="floor-map-label" data-ko="B2층 안내도" data-en="B2F Floor Map">B2층 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/B1층, B2층, 별관 가게소개_최종본-02.png" alt="B2층 매장 소개" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- B1층 -->
+    <div class="floor-panel" id="floor-b1">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_B1층.png" alt="B1층 지도">
+          <p class="floor-map-label" data-ko="B1층 안내도" data-en="B1F Floor Map">B1층 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/B1층, B2층, 별관 가게소개_최종본-01.png" alt="B1층 매장 소개" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 1층 -->
+    <div class="floor-panel" id="floor-f1">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_1층.png" alt="1층 지도">
+          <p class="floor-map-label" data-ko="1층 첫걸음길 안내도" data-en="1F First Steps Path Map">1층 첫걸음길 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/1층 가게소개_최종본-01.png" alt="1층 매장 소개 1" loading="lazy">
+          <img src="images/shops/1층 가게소개_최종본-02.png" alt="1층 매장 소개 2" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2층 -->
+    <div class="floor-panel" id="floor-f2">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_2층.png" alt="2층 지도">
+          <p class="floor-map-label" data-ko="2층 안내도" data-en="2F Floor Map">2층 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/2층 가게소개_최종본-01-01.png" alt="2층 매장 소개 1" loading="lazy">
+          <img src="images/shops/2층 가게소개_최종본-01-02.png" alt="2층 매장 소개 2" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3층 -->
+    <div class="floor-panel" id="floor-f3">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_3층.png" alt="3층 지도">
+          <p class="floor-map-label" data-ko="3층 안내도" data-en="3F Floor Map">3층 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/3층 가게소개_최종본-01.png" alt="3층 매장 소개 1" loading="lazy">
+          <img src="images/shops/3층 가게소개_최종본-02.png" alt="3층 매장 소개 2" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4층 -->
+    <div class="floor-panel" id="floor-f4">
+      <div class="floor-layout">
+        <div class="floor-map-area">
+          <img src="images/maps/모바일용_재편집_4층.png" alt="4층 지도">
+          <p class="floor-map-label" data-ko="4층 하늘정원 안내도" data-en="4F Sky Garden Map">4층 하늘정원 안내도</p>
+        </div>
+        <div class="floor-shops-area">
+          <img src="images/shops/4층 가게소개_최종본-01.png" alt="4층 매장 소개" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 별관 (Annex) -->
+    <div class="floor-panel" id="floor-annex">
+      <div class="floor-shops-only">
+        <img src="images/shops/B1층, B2층, 별관 가게소개_최종본-03.png" alt="별관 매장 소개" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== VISIT SECTION ============== -->
+<section class="visit" id="visit">
+  <div class="visit-grid">
+    <div class="visit-map">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.2!2d126.984!3d37.574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2eb1a1a2f11%3A0xbadd51be2e1a3c5f!2z7L2g7KeA6ri4!5e0!3m2!1sko!2skr!4v1" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="visit-info">
+      <p class="section-label">Visit Us</p>
+      <h2 class="section-title" style="color:#ffffff;" data-ko="오시는 길" data-en="How to Visit">오시는 길</h2>
+
+      <div class="info-block">
+        <p class="info-label">Address</p>
+        <p class="info-value" data-ko="서울특별시 종로구 인사동길 44<br>44, Insadong-gil, Jongno-gu, Seoul" data-en="44, Insadong-gil, Jongno-gu, Seoul, Korea">서울특별시 종로구 인사동길 44<br>44, Insadong-gil, Jongno-gu, Seoul</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Hours</p>
+        <p class="info-value" data-ko="매일 10:30 — 20:30<br>연중무휴 (설·추석 당일 휴무)" data-en="Daily 10:30 AM — 8:30 PM<br>Open year-round (Closed on Lunar New Year's Day & Chuseok Day)">매일 10:30 — 20:30<br>연중무휴 (설·추석 당일 휴무)</p>
+      </div>
+
+      <div class="info-block">
+        <p class="info-label">Transit</p>
+        <p class="info-value" data-ko="3호선 안국역 6번 출구 도보 3분<br>1호선 종각역 3번 출구 도보 8분" data-en="Line 3 Anguk Station Exit 6 — 3 min walk<br>Line 1 Jonggak Station Exit 3 — 8 min walk">3호선 안국역 6번 출구 도보 3분<br>1호선 종각역 3번 출구 도보 8분</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+
+      <p class="footer-addr">
+        서울특별시 종로구 인사동길 44<br>
+
+        &copy; SSAMZIEGIL. All rights reserved.
+      </p>
+    </div>
+    <div class="footer-links">
+      <a href="#shops" data-ko="층별안내" data-en="Floor Guide">층별안내</a>
+      <a href="https://smartstore.naver.com/ssamzigil" target="_blank">SHOP</a>
+      <a href="http://instagram.com/ssamzigil_official" target="_blank">Instagram</a>
+    </div>
+  </div>
+  <p class="footer-copy">SSAMZIEGIL — Where Art Meets Tradition in Insadong</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close">&times;</button>
+  <img src="" alt="확대 이미지">
+</div>
+
+<script>
+// ============== Language Toggle ==============
+let currentLang = 'ko';
+
+document.getElementById('langToggle').addEventListener('click', function() {
+  currentLang = currentLang === 'ko' ? 'en' : 'ko';
+  this.textContent = currentLang === 'ko' ? 'EN' : 'KO';
+  document.documentElement.lang = currentLang;
+
+  // Update all elements with data-ko / data-en attributes
+  document.querySelectorAll('[data-ko][data-en]').forEach(el => {
+    const text = el.getAttribute('data-' + currentLang);
+    if (el.tagName === 'BUTTON' && el.querySelector('svg')) {
+      // For buttons with SVG icons (cta-btn)
+      const svgEl = el.querySelector('svg');
+      const spanEl = el.querySelector('span');
+      if (spanEl) {
+        spanEl.textContent = text;
+      }
+    } else {
+      el.innerHTML = text;
+    }
+  });
+
+  // Update page title
+  document.title = currentLang === 'ko' 
+    ? '쌈지길 SSAMZIEGIL — 인사동의 예술이 흐르는 길'
+    : 'SSAMZIEGIL — Where Art Flows in Insadong';
+});
+
+// ============== Hero Slider ==============
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.hero-dot');
+let currentSlide = 0;
+let slideInterval;
+
+function goToSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function nextSlide() {
+  goToSlide((currentSlide + 1) % slides.length);
+}
+
+function startSlider() {
+  slideInterval = setInterval(nextSlide, 5000);
+}
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    clearInterval(slideInterval);
+    goToSlide(parseInt(dot.dataset.slide));
+    startSlider();
+  });
+});
+
+startSlider();
+
+// ============== Floor Tabs ==============
+const floorTabs = document.querySelectorAll('.floor-tab');
+const floorPanels = document.querySelectorAll('.floor-panel');
+
+floorTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    floorTabs.forEach(t => t.classList.remove('active'));
+    floorPanels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const targetId = 'floor-' + tab.dataset.floor;
+    document.getElementById(targetId).classList.add('active');
+  });
+});
+
+// ============== Lightbox ==============
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+
+function initLightbox() {
+  document.querySelectorAll('.gallery-item img, .floor-map-area img, .floor-shops-area img, .floor-shops-only img').forEach(img => {
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+}
+initLightbox();
+
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+// ============== Image Error Fallback ==============
+document.querySelectorAll('img').forEach(img => {
+  img.addEventListener('error', function() {
+    this.style.display = 'none';
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = `
+      width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:center;
+      background: linear-gradient(135deg, #2c2620 0%, #4a3728 50%, #1a1714 100%);
+      color: rgba(201,169,110,0.85); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em;
+      font-family: var(--sans); border-radius: inherit; padding: 1rem; line-height: 1.4;
+    `;
+    placeholder.innerHTML = (this.alt || '이미지') + '<br><span style="font-size:0.7rem; opacity:0.6; font-weight:300;">(Ssamziegil)</span>';
+    this.parentNode.appendChild(placeholder);
+  });
+});
+
+// ============== Nav Scroll Effect ==============
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 100) {
+    nav.style.background = 'rgba(255,255,255,0.98)';
+  } else {
+    nav.style.background = 'rgba(255,255,255,0.95)';
+  }
+});
+
+// ============== Intersection Observer ==============
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.about-grid, .exp-card, .gallery-item, .floor-panel, .visit-grid').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  observer.observe(el);
+});
+
+// ============== Mobile Nav Close on Link Click ==============
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.remove('open');
+  });
+});
+</script>
+
+</body>
+</html>
